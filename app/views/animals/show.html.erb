@@ -1,0 +1,137 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Back Button -->
+  <%= link_to animals_path, class: "mb-6 inline-flex items-center gap-2 text-gray-500 hover:text-gray-700" do %>
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+    </svg>
+    Voltar para lista
+  <% end %>
+
+  <div class="grid gap-8 lg:grid-cols-3">
+    <!-- Main Content -->
+    <div class="lg:col-span-2">
+      <!-- Image -->
+      <div class="mb-6 overflow-hidden rounded-2xl">
+        <% if @animal.image.present? %>
+          <img src="<%= @animal.image %>" alt="<%= @animal.name %>" class="aspect-[4/3] w-full object-cover">
+        <% else %>
+          <div class="aspect-[4/3] w-full bg-gradient-to-br from-orange-100 to-orange-200 flex items-center justify-center">
+            <span class="text-9xl"><%= @animal.species_emoji %></span>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Info -->
+      <div class="rounded-2xl bg-white p-6 shadow-soft">
+        <div class="mb-4 flex flex-wrap items-center gap-3">
+          <h1 class="text-3xl font-bold text-gray-900 md:text-4xl">
+            <%= @animal.name %>
+          </h1>
+          <span class="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600">
+            <%= @animal.species_label %>
+          </span>
+        </div>
+
+        <!-- Location & Date -->
+        <div class="mb-6 flex flex-wrap gap-4 text-gray-500">
+          <div class="flex items-center gap-1.5">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span><%= @animal.location %></span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span>Anunciado em <%= l(@animal.created_at, format: :long) %></span>
+          </div>
+        </div>
+
+        <!-- Tags -->
+        <div class="mb-6 flex flex-wrap gap-2">
+          <span class="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600">
+            <%= @animal.gender_symbol %> <%= @animal.gender_label %>
+          </span>
+          <span class="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600">
+            <%= @animal.age %>
+          </span>
+          <span class="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600">
+            Porte <%= @animal.size_label %>
+          </span>
+          <% if @animal.breed.present? %>
+            <span class="rounded-full border border-gray-200 px-3 py-1 text-sm text-gray-600">
+              <%= @animal.breed %>
+            </span>
+          <% end %>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-6">
+          <h2 class="mb-3 text-lg font-semibold text-gray-900">Sobre</h2>
+          <p class="leading-relaxed text-gray-500"><%= @animal.description %></p>
+        </div>
+
+        <!-- Health Status -->
+        <div>
+          <h2 class="mb-3 text-lg font-semibold text-gray-900">Saúde</h2>
+          <div class="flex flex-wrap gap-4">
+            <div class="flex items-center gap-2">
+              <% if @animal.is_vaccinated %>
+                <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-gray-900">Vacinado</span>
+              <% else %>
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span class="text-gray-400">Vacinado</span>
+              <% end %>
+            </div>
+            <div class="flex items-center gap-2">
+              <% if @animal.is_neutered %>
+                <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <span class="text-gray-900">Castrado</span>
+              <% else %>
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+                <span class="text-gray-400">Castrado</span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar - Contact -->
+    <div class="lg:col-span-1">
+      <div class="sticky top-24 rounded-2xl bg-white p-6 shadow-soft">
+        <h2 class="mb-2 text-lg font-semibold text-gray-900">
+          Responsável
+        </h2>
+        <p class="mb-4 text-xl font-bold text-gray-900">
+          <%= @animal.caregiver_name %>
+        </p>
+        <p class="mb-1 flex items-center gap-1.5 text-sm text-gray-500">
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          <%= @animal.location %>
+        </p>
+        <div class="my-6 border-t border-gray-200"></div>
+
+        <h3 class="mb-4 font-semibold text-gray-900">
+          Entre em Contato
+        </h3>
+        
+        <%= render "contact_links", animal: @animal %>
+      </div>
+    </div>
+  </div>
+</div>

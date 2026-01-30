@@ -1,0 +1,73 @@
+<div class="container mx-auto px-4 py-8">
+  <!-- Page Header -->
+  <div class="mb-8">
+    <h1 class="mb-2 text-3xl font-bold text-gray-900 md:text-4xl">
+      Animais para Adoção
+    </h1>
+    <p class="text-gray-500">
+      Encontre seu novo companheiro entre <%= @animals.count %> animais disponíveis
+    </p>
+  </div>
+
+  <!-- Filters -->
+  <div class="mb-8 space-y-4" data-controller="filters">
+    <%= form_with url: animals_path, method: :get, data: { turbo_frame: "animals_list", action: "change->filters#submit" }, class: "space-y-4" do |f| %>
+      <!-- Search -->
+      <div class="relative">
+        <svg class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <%= f.text_field :search, value: params[:search], placeholder: "Buscar por nome, cidade ou estado...", class: "h-12 w-full rounded-xl border border-gray-200 bg-white pl-10 pr-4 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20" %>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2 text-sm text-gray-500">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+          </svg>
+          Filtros:
+        </div>
+
+        <%= f.select :species, options_for_select([["Todas Espécies", ""], ["🐕 Cachorro", "dog"], ["🐱 Gato", "cat"], ["🐾 Outro", "other"]], params[:species]), {}, class: "h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:border-orange-500 focus:outline-none" %>
+
+        <%= f.select :size, options_for_select([["Todos Portes", ""], ["Pequeno", "small"], ["Médio", "medium"], ["Grande", "large"]], params[:size]), {}, class: "h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:border-orange-500 focus:outline-none" %>
+
+        <%= f.select :gender, options_for_select([["Todos Sexos", ""], ["Macho", "male"], ["Fêmea", "female"]], params[:gender]), {}, class: "h-10 rounded-xl border border-gray-200 bg-white px-3 text-sm focus:border-orange-500 focus:outline-none" %>
+
+        <% if params[:species].present? || params[:size].present? || params[:gender].present? || params[:search].present? %>
+          <%= link_to animals_path, class: "text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1" do %>
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+            Limpar
+          <% end %>
+        <% end %>
+
+        <%= f.submit "Filtrar", class: "h-10 rounded-xl bg-orange-500 px-4 text-sm font-medium text-white hover:bg-orange-600 cursor-pointer" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Results -->
+  <%= turbo_frame_tag "animals_list" do %>
+    <% if @animals.any? %>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <% @animals.each do |animal| %>
+          <%= render "animal_card", animal: animal %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="flex flex-col items-center justify-center rounded-2xl bg-gray-100/50 py-16">
+        <div class="mb-4 text-6xl">🔍</div>
+        <h3 class="mb-2 text-xl font-semibold text-gray-900">
+          Nenhum animal encontrado
+        </h3>
+        <p class="mb-6 text-gray-500">
+          Tente ajustar seus filtros de busca
+        </p>
+        <%= link_to "Limpar Filtros", animals_path, class: "inline-flex items-center gap-2 rounded-xl border-2 border-gray-200 bg-white px-4 py-2 font-medium text-gray-700 transition-all hover:border-gray-300" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
