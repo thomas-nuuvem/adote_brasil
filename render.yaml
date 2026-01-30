@@ -1,0 +1,31 @@
+# Render Blueprint
+# https://render.com/docs/blueprint-spec
+
+databases:
+  - name: adote-brasil-db
+    databaseName: adote_brasil_production
+    user: adote_brasil
+    plan: free
+    region: oregon
+
+services:
+  - type: web
+    name: adote-brasil
+    runtime: ruby
+    plan: free
+    region: oregon
+    buildCommand: "./bin/render-build.sh"
+    startCommand: "bundle exec puma -C config/puma.rb"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: adote-brasil-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: "true"
+      - key: RAILS_SERVE_STATIC_FILES
+        value: "true"
